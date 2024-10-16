@@ -1,0 +1,47 @@
+# config version, do not touch
+file-version: 1
+
+#   [=============]
+#   [  PROXYCHAT  ]
+#   [=============]
+
+# Servers in the same channel will be able to receive each other's messages
+# null channels will be ignored
+# to add servers from other proxies, add them to the same channel in their config
+
+channels:
+  1:
+    - "lobby_1"
+    - "lobby_2"
+    - "lobby_3"
+  2:
+    - "server_1"
+    - "server_2"
+  3:
+  4:
+  5:
+  6:
+  7:
+  8:
+    - "server_3"
+
+# allow multiple instances of ProxyChat to communicate
+# useful for servers with multiple proxies
+# xProxy will probably be made into its own program soon
+xProxy:
+  enable: false
+  name: "Main-Proxy"
+  xProxy-server-ip: '127.0.0.1'
+  xProxy-server-port: 25599
+  password: "P@ssword" # set to same value as in xProxy config
+
+# formats the message using placeholders
+# if ranks are disabled, the prefix placeholder will also be disabled
+# %prefix% = player rank prefix
+# %player% = username of sender
+# %message% = raw text message from player
+# %server% = server message was sent from
+message-format: "&7[&a%server%&7] %prefix% %player% &f: %message%"
+
+# use xProxyRanks for ranks?
+xProxyRanks: enable

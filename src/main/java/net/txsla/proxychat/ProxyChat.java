@@ -5,17 +5,25 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
+import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
+import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
+import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
+import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import net.txsla.proxychat.xProxy.xProxyClient;
 import org.slf4j.Logger;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
+import java.nio.file.Path;
 import java.util.List;
 
 @Plugin(
@@ -25,61 +33,88 @@ import java.util.List;
 )
 public class ProxyChat {
 
-    private final Logger logger;
-    private final ProxyServer proxy;
-    private static List<RegisteredServer>[] channel;
+    public static Logger logger;
+    public final ProxyServer proxy;
+    public static YamlDocument config;
+    public static List<RegisteredServer>[] channel;
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
+    public void onProxyInitialization(ProxyInitializeEvent event) throws IOException {
+        // for xProxy
+        String username = config.getString("xProxy.name");
+        String password = config.getString("password");
+        String ip = config.getString("xProxy-server-ip");
+        int port = 25599;
+
+
+        if ( config.getBoolean("xProxy.enable") ) {
+            // start xProxy Client
+            msgMngr.xProxyEnabled = true;
+            System.out.println("Starting xProxy Client");
+            new Thread(new Runnable() { // xProxy Thread
+                @Override
+                public void run() {
+                    Socket socket = null;
+                    try {
+                        socket = new Socket(ip, port);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    xProxyClient client = new xProxyClient(socket, username, password);
+                    client.listener();
+                    client.send();
+                    xProxyClient.out = ("con¦" + password);
+                }
+            }).start();
+        }
+
     }
     @Inject
-    public ProxyChat(ProxyServer proxy, Logger logger) {
+    public ProxyChat(ProxyServer proxy, Logger logger, @DataDirectory Path configDirectory) {
     this.proxy = proxy; this.logger = logger;
 
+    // Initialise config
+    try {
+        config = YamlDocument.create(new File(configDirectory.toFile(), "config.yml"),
+                //getClass().getResourceAsStream(File.separator + "config.yml"),
+                getClass().getResourceAsStream("/config.yml"),
+                GeneralSettings.DEFAULT,
+                LoaderSettings.builder().setAutoUpdate(true).build(),
+                DumperSettings.DEFAULT,
+                UpdaterSettings.builder().setVersioning(new BasicVersioning("file-version")).setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+        );
+        config.update();
+        config.save();
+    } catch (IOException ex) {
+        logger.error("[Startup] Error loading config!");
+    }
 
 
-
-    logger.info("[ProxyChat] Plugin Loaded");
+    logger.info("Plugin Loaded");
     }
 
     @Subscribe
     public void onChat(PlayerChatEvent event) {
+
+        // get message & sender data
         Player p = event.getPlayer();
         String username = p.getUsername();
+        String UUID = "" + p.getUniqueId();
         String server = String.valueOf(p.getCurrentServer());
-        String message = event.getMessage().replaceAll("&", "§");
-        String namePrefix = "";
-        logger.info("Prefix: " + namePrefix);
-        logger.info("Player: " + username);
-        logger.info("Server: " + server );
-        logger.info("Message: " + message );
+        String message = event.getMessage();
 
-    }
-    public void SendMessage(int n, Component message) {
-        Player[] players;
-            for (int i = 0; i < channel[n].size(); i--) {
-                for (Player player : channel[n].get(i).getPlayersConnected())
-                    player.sendMessage(message);
-            }
-    }
-    private static int getChannel(String plugin) {
-        for (int n = 1; n <= channel.length ; n++ ) {
-            if (channel[n].contains(plugin)) return n;
-        }
-        return 0;
-    }
-    static String getPrefix(String player) {
-        return "[%prefix%] ";
-    }
-    static String formatServerPrefix(String server) {
-        return "[%server%] ";
-    }
-    public static Component formatMessage(String chatMessage, String sender, String server) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(
-        formatServerPrefix(server) +
-        getPrefix(sender) +
-        sender +
-        "&f: " + chatMessage);
+        // get channel
+        int channel = msgMngr.getChannel(server);
+
+        // format message
+        Component formattedMessage = msgMngr.formatMessage(server, username, UUID, message);
+
+        // send message to other servers/proxies
+        msgMngr.sendMessage(channel, formattedMessage);
+        if (msgMngr.xProxyEnabled) msgMngr.xProxySendMessage(channel, server, username, UUID, message);
+
+
+
     }
 }
 
