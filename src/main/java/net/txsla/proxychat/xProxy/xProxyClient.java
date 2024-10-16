@@ -8,14 +8,14 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class xProxyClient {
+    public final String xProxyClientVersion = "0.1dev";
     private Socket socket;
     private BufferedWriter bufferedWriter;
     private BufferedReader bufferedReader;
-    private String clientName;
-    private String password;
-    public static String out;
-    public static String in;
+    private String clientName, ip, port, password;
+    public static String in, out;
     public static String sep = "¦";
+
 
     public xProxyClient(Socket socket, String clientName, String password) {
         try {
@@ -57,7 +57,10 @@ public class xProxyClient {
                     try {
                         recievedData = bufferedReader.readLine();
                         in = recievedData;
-                        System.out.println("recievedData = " + recievedData);
+
+                        // debug : remove later
+                        System.out.println("[xProxy] recievedData = " + recievedData);
+
                     } catch (Exception e) {
                         closeClient(socket, bufferedReader, bufferedWriter);
                     }
@@ -68,11 +71,21 @@ public class xProxyClient {
     public void closeClient(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
         try {
             // close readers & socket
+            System.out.println("[xProxy] disconnected - closing client");
             if (bufferedReader != null ) bufferedReader.close();
             if (bufferedWriter != null ) bufferedWriter.close();
             if (socket != null) socket.close();
+
+            System.out.println("[xProxy] attempting to reconnect...");
+
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+    public void reconnect() {
+        while (socket.isClosed()) {
+
+
         }
     }
 }

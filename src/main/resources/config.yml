@@ -9,6 +9,8 @@ file-version: 1
 # null channels will be ignored
 # to add servers from other proxies, add them to the same channel in their config
 
+proxy-name: "Main-Proxy"
+
 channels:
   1:
     - "lobby_1"
@@ -30,7 +32,6 @@ channels:
 # xProxy will probably be made into its own program soon
 xProxy:
   enable: false
-  name: "Main-Proxy"
   xProxy-server-ip: '127.0.0.1'
   xProxy-server-port: 25599
   password: "P@ssword" # set to same value as in xProxy config
@@ -41,7 +42,14 @@ xProxy:
 # %player% = username of sender
 # %message% = raw text message from player
 # %server% = server message was sent from
+# %proxy% = name of proxy
 message-format: "&7[&a%server%&7] %prefix% %player% &f: %message%"
 
 # use xProxyRanks for ranks?
 xProxyRanks: enable
+
+# Broadcast/Format player join/leave messages?
+join_and_leave_messages:
+  enable-broadcast: true
+  connect-format: '%player% has joined the server %server%'
+  disconnect-format: '%player% has left the server %server%'

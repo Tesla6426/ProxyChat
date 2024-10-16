@@ -4,12 +4,24 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.txsla.proxychat.xProxy.xProxyClient;
+
+import java.util.ArrayList;
 import java.util.Base64;
 
 public class msgMngr {
+    public static ArrayList<String[]> ranks;
     public static boolean xProxyEnabled;
-    public static Component formatMessage(String server, String sender, String UUID, String chatMessage) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(sender + "&f: " + chatMessage);
+    public static Component formatMessage(String proxy, String server, String sender, String UUID, String chatMessage) {
+        String format = ProxyChat.config.getString("message-format");
+        String role = "&aPlayer-Role";
+        String msg = format
+                .replaceAll("%proxy%", proxy)
+                .replaceAll("%server%", server)
+                .replaceAll("%player%", sender)
+                .replaceAll("%message%", chatMessage)
+                .replaceAll("%prefix%", role);
+
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(msg);
     }
     public static void sendMessage(int n, Component message) {
         // sends message to all servers in channel n
@@ -29,31 +41,44 @@ public class msgMngr {
         // send to other proxies
         xProxyClient.out = "bdc¦proxychat-" + encodedMessage;
     }
-    public static int getChannel(String plugin) {
-        for (int n = 1; n <= ProxyChat.channel.length ; n++ ) {
-            if (ProxyChat.channel[n].equals(plugin))
-                return n; }
-        return 0; // 0 is default channel for any unlisted servers
-    }
-    public static void xProxyInterface() {
-        // Start anonymous thread to check for updates from xProxy
+    public static void xProxyReceive() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String recieved;
-                // infinately loop while xProxy is enabled
                 while (xProxyEnabled) {
-                    if (xProxyClient.in != null) {
-                        // grab data from xProxy
-                        recieved = xProxyClient.in;
-                        xProxyClient.in = null;
+                if (xProxyClient.in != null) {
+                    String received = xProxyClient.in;
+                    xProxyClient.in = null;
 
-                        switch (recieved)  {
-
-                        }
+                    // no one cares who sent the message :(
+                    String sender = received.substring(0, received.indexOf("¦"));
+                    String com = received.substring(received.indexOf("¦"), received.lastIndexOf("¦"));
+                    String data = new String(Base64.getDecoder().decode( received.substring(received.lastIndexOf("¦"), received.length()) ));
+                    switch (com) {
+                        case "btd":
+                            // check if message was for ProxyChat
+                            if (data.substring(0, data.indexOf("-")).equals("proxychat")) {
+                                data = data.substring(data.indexOf("-")+1, data.length());
+                                String[] msg = data.split("¦");
+                                // format and send message
+                                sendMessage( Integer.parseInt( msg[0] ), formatMessage(sender, msg[1], msg[2], msg[3], msg[4]) );
+                            }
+                            break;
+                        case "dbr":
+                            break;
+                        case "dbu":
+                            break;
                     }
+
+                }
                 }
             }
-            }).start();
+        }).start();
+    }
+    public static int getChannel(String server) {
+        for (int n = 1; n <= ProxyChat.channel.length ; n++ ) {
+            if (ProxyChat.channel[n].equals(server))
+                return n; }
+        return 0; // 0 is default channel for any unlisted servers
     }
 }

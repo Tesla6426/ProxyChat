@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.server.ServerRegisteredEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
@@ -19,7 +20,6 @@ import net.kyori.adventure.text.Component;
 import net.txsla.proxychat.xProxy.xProxyClient;
 import org.slf4j.Logger;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -37,15 +37,19 @@ public class ProxyChat {
     public final ProxyServer proxy;
     public static YamlDocument config;
     public static List<RegisteredServer>[] channel;
+    public static String proxyName;
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) throws IOException {
         // for xProxy
-        String username = config.getString("xProxy.name");
-        String password = config.getString("password");
-        String ip = config.getString("xProxy-server-ip");
-        int port = 25599;
+        proxyName = config.getString("proxy-name");
+        String password = config.getString("xProxy.password");
+        String ip = config.getString("xProxy.xProxy-server-ip");
+        int port = config.getInt("xProxy.xProxy-server-port");
 
+        System.out.println("proxyName = " + proxyName);
+        System.out.println("xProxy ip = " + ip);
+        System.out.println("xProxy port = " + port);
 
         if ( config.getBoolean("xProxy.enable") ) {
             // start xProxy Client
@@ -60,14 +64,14 @@ public class ProxyChat {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    xProxyClient client = new xProxyClient(socket, username, password);
+                    xProxyClient client = new xProxyClient(socket, proxyName, password);
                     client.listener();
                     client.send();
+                    msgMngr.xProxyReceive();
                     xProxyClient.out = ("con¦" + password);
                 }
             }).start();
         }
-
     }
     @Inject
     public ProxyChat(ProxyServer proxy, Logger logger, @DataDirectory Path configDirectory) {
@@ -107,12 +111,19 @@ public class ProxyChat {
         int channel = msgMngr.getChannel(server);
 
         // format message
-        Component formattedMessage = msgMngr.formatMessage(server, username, UUID, message);
+        Component formattedMessage = msgMngr.formatMessage(proxyName, server, username, UUID, message);
 
         // send message to other servers/proxies
         msgMngr.sendMessage(channel, formattedMessage);
         if (msgMngr.xProxyEnabled) msgMngr.xProxySendMessage(channel, server, username, UUID, message);
 
+        RegisteredServer registeredServer;
+
+        System.out.println(
+                "getCurrentServer: " + p.getCurrentServer().get().getServer() +
+                "\n proxy.getServer = " + proxy.getServer("server-1") +
+                ""
+        );
 
 
     }
