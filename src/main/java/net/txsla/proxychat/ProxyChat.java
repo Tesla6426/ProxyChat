@@ -18,5 +18,8 @@ public class ProxyChat {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        // A blank canvas for a work of art
+
+
     }
 }
