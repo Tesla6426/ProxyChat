@@ -4,9 +4,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-import java.util.Optional;
-
-public class message {
+public class send {
     /*
     When you are reading this code you might ask yourself
      "why are there so many methods to do basically the same thing (message<destination>)"
@@ -36,5 +34,5 @@ public class message {
         messageProxy(message);
         // add xProxy send command here
     }
-
+// scitzo ass comments - no one is ever going to actually read this except me lol
 }

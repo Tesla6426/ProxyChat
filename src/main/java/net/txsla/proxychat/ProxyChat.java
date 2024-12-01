@@ -55,8 +55,14 @@ public class ProxyChat {
 
     }
 
-    @Subscribe
+    @Subscribe // < --- sub to my YouTube also :) {I do not ever post though so don't expect much}
     public void onProxyInitialization(ProxyInitializeEvent event) {
+
+        // listen
+        proxy.getEventManager().register(this, new listener());
+
+
+
         // Set Configs
 
         // Start xProxyClient IF enabled in configs

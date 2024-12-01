@@ -76,7 +76,7 @@ public class xProxyClient {
             if (bufferedWriter != null ) bufferedWriter.close();
             if (socket != null) socket.close();
 
-            System.out.println("[xProxy] attempting to reconnect...");
+            System.out.println("[xProxy] attempting to reconnect..."); // or not lol, remind me to finish this code later
 
         } catch (Exception e){
             e.printStackTrace();
