@@ -61,9 +61,10 @@ public class ProxyChat {
         // listen
         proxy.getEventManager().register(this, new listener());
 
+        // load configs
+        loadConfigs();
 
 
-        // Set Configs
 
         // Start xProxyClient IF enabled in configs
 
@@ -71,9 +72,9 @@ public class ProxyChat {
 
         // Start relaying messages :)
     }
-    public void GlobalConfigs() {
-        // note to self:
-        // MAKE THE PLUGIN ACTUALLY WORK BEFORE ADDING THE CONFIGS!!!!
-        // DON'T BE RESTARTED THIS TME
+    public void loadConfigs() {
+        // should work properly this time :)
+        format.format = config.getString("message-format");
+
     }
 }

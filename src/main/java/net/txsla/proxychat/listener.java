@@ -28,7 +28,8 @@ public class listener {
         event.setResult(PlayerChatEvent.ChatResult.denied());
 
         // [TEMPORARY CODE - REMOVE LATER]
-        send.messageProxy("[ProxyChat] [" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
+        // send.messageProxy("[ProxyChat] [" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
+        send.messageProxy( format.playerMessage(sender, message, "main-proxy") );
     }
 
 
