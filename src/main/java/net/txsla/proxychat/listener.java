@@ -6,6 +6,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 public class listener {
+    public static boolean logMessages;
     @Subscribe
     public void onPlayerMessage(PlayerChatEvent event) {
         // get sender info
@@ -19,11 +20,13 @@ public class listener {
         //cancel event as to not double-send the message to players
         event.setResult(PlayerChatEvent.ChatResult.denied());
 
+
         // send message to server channel
         send.messageChannel(server, format.playerMessage(sender, message));
 
-        // [TEMPORARY CODE - REMOVE LATER]
-        // send.messageProxy("[ProxyChat] [" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
-        // send.messageProxy( format.playerMessage(sender, message, "main-proxy") );
+        if (logMessages) {
+            //log the message
+
+        }
     }
 }

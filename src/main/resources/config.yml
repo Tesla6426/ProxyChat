@@ -57,6 +57,17 @@ channels:
 # (it is only recommended to disable this if you are muting a server on purpose)
 reportFailedMessages: true
 
+# [ Moderation ]
+# every time a player sends a message, it increments a counter
+# every x milliseconds that counter is decremented
+# if a player hits the max messages on their counter, their  messages are not shown to other players
+spam-limiter:
+  enabled: true
+  counter-ceiling: 3 # if a player's message counter goes above this number, their messages will be hidden to other players
+  decrement-timer: 4000 # milliseconds between message counter decrements
+  relay-back-to-player: true # show the spammer their messages, so they cannot tell they are being ignored
+# logs are stored in /plugins/ProxyChat/logs/log_mm-dd-yyyy.txt
+log-messages: true
 
 # [ X PROXY ]
 # allow multiple instances of ProxyChat to communicate
@@ -66,29 +77,4 @@ xProxy:
   xProxy-server-ip: '127.0.0.1'
   xProxy-server-port: 25599
   password: "P@ssword" # set to same value as in xProxy config
-
-
-# [PROXYCHAT RANKS]
-# ProxyChat Ranks allow you to manage visual ranks in chat within this plugin
-# it is recommended to use a more dynamic ranking system such as LuckPerms or xProxy
-# these ranks are PURELY VISUAL and only used if 'rank-system:' is set to ProxyChat
-ProxyChat-Ranks:
-  enable: false # proxychat rank commands are disabled when this is disabled
-  rank-list:
-    - "admin"
-  rank-config:
-    default: # all non-ranked players
-      prefix: "[MEMBER]"
-    admin:
-      prefix: "[ADMIN]"
-      players:
-        - "_txsla"
-        - "nbtArchives"
-        - "your-ign"
-    moderator:
-      prefix: "[Moderator]"
-      players:
-        - "mod1"
-        - "mod2"
-
 

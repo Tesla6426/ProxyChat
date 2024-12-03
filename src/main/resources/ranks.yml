@@ -1,0 +1,24 @@
+# do not touch this value
+file-version: 1
+
+# This file is for ProxyChat's built-in ranks system
+# The ranks are PURELY VISUAL and do not grant any special permissions
+# The ProxyChat ranks system is only enabled when 'rank-system:' is set to "ProxyChat" in the main config
+ProxyChatRanks:
+  ranks-list: # list all the ranks you have added here
+    - "admin"
+    - "moderator"
+  ranks-config:
+    default: # for all non-ranked players, do NOT delete this or add it to the rank list
+      prefix: "&7[MEMBER]"
+    admin:
+      prefix: "&4[ADMIN]"
+      players:
+        - "_txsla"
+        - "nbtArchives"
+        - "your-ign"
+    moderator:
+      prefix: "&c[Moderator]"
+      players:
+        - "mod1"
+        - "mod2"
