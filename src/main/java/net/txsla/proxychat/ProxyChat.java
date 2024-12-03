@@ -14,11 +14,8 @@ import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import org.slf4j.Logger;
-
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 
 @Plugin(
@@ -60,13 +57,11 @@ public class ProxyChat {
     @Subscribe // < --- sub to my YouTube also :) {I do not ever post though so don't expect much}
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
-        // listen
+        // register listener
         proxy.getEventManager().register(this, new listener());
 
-        // load configs
         loadConfigs();
-
-
+        loadChannels();
 
         // Start xProxyClient IF enabled in configs
 
@@ -77,15 +72,35 @@ public class ProxyChat {
     public void loadConfigs() {
         // load global config vars
         format.format = config.getString("message-format");
+        proxyName = config.getString("proxy-name");
         send.reportFailedMessages = config.getBoolean("reportFailedMessages");
-
+    }
+    public void loadChannels() {
         // accounts for channel 0 (skips null check)
-        send.channel[0] = config.getStringList("channels.0");
+        send.channel.add( config.getStringList("channels.0") );
 
         // add servers listed in config to a String List Array until it reaches a null channel
         int x = 1;
-        while (config.getStringList("channels." + x) != null) {
-            send.channel[x] = config.getStringList("channels." + x); x++;
+        while (!config.getStringList("channels." + x).isEmpty()) {
+            send.channel.add(config.getStringList("channels." + x)); x++;
+
+        }
+    }
+    public static void log(int severity, String message) {
+        // I promise this is useful
+        switch (severity) {
+            case -1:
+                logger.debug(message);
+                break;
+            default:
+                logger.info(message);
+                break;
+            case 1:
+                logger.warn(message);
+                break;
+            case 2:
+                logger.error(message);
+                break;
         }
     }
 }

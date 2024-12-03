@@ -33,7 +33,7 @@ rank-system: "ProxyChat"
 # null channels are ignored
 
 # Make sure to populate the channels in order ( 1,2,3,4,5...).  {channel 0 is counted separately, it CAN be null}
-# The plugin will stop scanning channels when it reaches a null channel
+# The plugin will stop scanning channels when it reaches an empty channel
 # Servers not listed will have their player chat disabled
 channels:
   0: # put independent servers here (channel 0 is for servers that do NOT share messages)
