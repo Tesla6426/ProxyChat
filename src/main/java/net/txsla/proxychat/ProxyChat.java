@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 @Plugin(
@@ -26,8 +27,9 @@ import java.util.Optional;
         version = "dev"
 )
 public class ProxyChat {
+    public static String proxyName;
     @Inject
-    private Logger logger;
+    public static Logger logger;
     public static ProxyServer proxy;
     private static YamlDocument config;
     @Inject
@@ -73,8 +75,17 @@ public class ProxyChat {
         // Start relaying messages :)
     }
     public void loadConfigs() {
-        // should work properly this time :)
+        // load global config vars
         format.format = config.getString("message-format");
+        send.reportFailedMessages = config.getBoolean("reportFailedMessages");
 
+        // accounts for channel 0 (skips null check)
+        send.channel[0] = config.getStringList("channels.0");
+
+        // add servers listed in config to a String List Array until it reaches a null channel
+        int x = 1;
+        while (config.getStringList("channels." + x) != null) {
+            send.channel[x] = config.getStringList("channels." + x); x++;
+        }
     }
 }

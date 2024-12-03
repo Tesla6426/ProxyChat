@@ -9,14 +9,15 @@ public class format {
     *  per-channel and global formatting need to work
     * */
     public static String format;
-    public static String playerMessage(Player player, String message, String fromProxy) {
+    public static String playerMessage(Player player, String message) {
         // replace placeholders
         String formattedMessage = format;
+
         return formattedMessage
                 .replaceAll("%server%", player.getCurrentServer().get().getServerInfo().getName())
                 .replaceAll("%player%", player.getUsername())
-                .replaceAll("%proxy%", fromProxy)
-                .replaceAll("%prefix%", "[RANK]")
+                .replaceAll("%proxy%", ProxyChat.proxyName)
+                .replaceAll("%prefix%", ranks.getPrefix(player))
                 .replaceAll("%message%", message);
     }
 }

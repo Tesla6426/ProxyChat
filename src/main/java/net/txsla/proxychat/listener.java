@@ -27,9 +27,12 @@ public class listener {
         //cancel event as to not double-send the message to players
         event.setResult(PlayerChatEvent.ChatResult.denied());
 
+        // send message to server channel
+        send.messageChannel(server, format.playerMessage(sender, message));
+
         // [TEMPORARY CODE - REMOVE LATER]
         // send.messageProxy("[ProxyChat] [" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
-        send.messageProxy( format.playerMessage(sender, message, "main-proxy") );
+        // send.messageProxy( format.playerMessage(sender, message, "main-proxy") );
     }
 
 

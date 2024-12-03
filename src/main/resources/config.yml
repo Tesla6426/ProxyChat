@@ -8,6 +8,7 @@ file-version: 1
 
 proxy-name: "Main-Velocity-Proxy"
 
+# [ MESSAGE FORMAT ]
 # formats the messages using placeholders
 # if ranks are disabled, the prefix placeholder will also be disabled
 # these are currently not compatible with other plugins
@@ -18,15 +19,22 @@ proxy-name: "Main-Velocity-Proxy"
 # %proxy-name% = name of proxy
 message-format: "&7[&a%server%&7] %prefix% %player% &f: %message%"
 
+# [ RANKS ]
 # What system do you want to use for visual ranks?
 # Options: ProxyChat, xProxy, none (LuckPerms compatibility soon? [prob not] )
 rank-system: "ProxyChat"
 
+
+# [ CHANNELS ]
 # servers in the same channel will share player messages
 # put servers you do NOT want to share messages into channel '0'
 # any server not put in a channel will have its player messages disabled
 # When using xProxy, the message channels work across different proxies
 # null channels are ignored
+
+# Make sure to populate the channels in order ( 1,2,3,4,5...).  {channel 0 is counted separately, it CAN be null}
+# The plugin will stop scanning channels when it reaches a null channel
+# Servers not listed will have their player chat disabled
 channels:
   0: # put independent servers here (channel 0 is for servers that do NOT share messages)
     - "banned-players" # These three servers will NOT share messages
@@ -45,6 +53,12 @@ channels:
   8:
 # if you ever need more than 8 channels then just add more to the config
 
+# Reports failed to send messages to console
+# (it is only recommended to disable this if you are muting a server on purpose)
+reportFailedMessages: true
+
+
+# [ X PROXY ]
 # allow multiple instances of ProxyChat to communicate
 # useful for servers with multiple proxies
 xProxy:
@@ -54,11 +68,10 @@ xProxy:
   password: "P@ssword" # set to same value as in xProxy config
 
 
-
+# [PROXYCHAT RANKS]
 # ProxyChat Ranks allow you to manage visual ranks in chat within this plugin
 # it is recommended to use a more dynamic ranking system such as LuckPerms or xProxy
-# these ranks are PURELY VISUAL
-
+# these ranks are PURELY VISUAL and only used if 'rank-system:' is set to ProxyChat
 ProxyChat-Ranks:
   enable: false # proxychat rank commands are disabled when this is disabled
   rank-list:
@@ -75,5 +88,7 @@ ProxyChat-Ranks:
     moderator:
       prefix: "[Moderator]"
       players:
+        - "mod1"
+        - "mod2"
 
 
