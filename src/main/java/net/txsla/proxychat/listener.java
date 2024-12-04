@@ -5,10 +5,11 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
+import java.io.IOException;
+
 public class listener {
-    public static boolean logMessages;
     @Subscribe
-    public void onPlayerMessage(PlayerChatEvent event) {
+    public void onPlayerMessage(PlayerChatEvent event) throws IOException {
         // get sender info
         Player sender = event.getPlayer();
         String message = event.getMessage();
@@ -24,9 +25,9 @@ public class listener {
         // send message to server channel
         send.messageChannel(server, format.playerMessage(sender, message));
 
-        if (logMessages) {
+        if (log.enabled) {
             //log the message
-
+            log.add( "[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> : " + message);
         }
     }
 }

@@ -15,6 +15,7 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import org.slf4j.Logger;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -85,24 +86,17 @@ public class ProxyChat {
     @Subscribe // < --- sub to my YouTube also :) {I do not ever post though so don't expect much}
     public void onProxyInitialization(ProxyInitializeEvent event) {
 
-        // register listener
         proxy.getEventManager().register(this, new listener());
-
-
         loadChannels();
 
-        // Start xProxyClient IF enabled in configs
-
-        // Scan servers into channels
-
-        // Start relaying messages :)
     }
     public void loadConfigs() {
         // load global config vars
         format.format = config.getString("message-format");
         proxyName = config.getString("proxy-name");
-        listener.logMessages = config.getBoolean("log-messages");
         send.reportFailedMessages = config.getBoolean("reportFailedMessages");
+        log.enabled = config.getBoolean("log-messages");
+        try {log.loadLogFile();} catch (Exception e) {e.printStackTrace();}
         switch (config.getString("rank-system").toLowerCase()) {
             case "proxychat":
             case "proxy-chat":
