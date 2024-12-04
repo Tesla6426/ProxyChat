@@ -17,6 +17,7 @@ public class log {
     static String logFileName;
     static boolean enabled;
     public static void add(String message) throws IOException {
+        // log text to file
         BufferedWriter out = new BufferedWriter(new FileWriter(logFile, true) );
         out.write(
                 "[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "] "
@@ -30,10 +31,12 @@ public class log {
         // make sure folders exists :skull:
         new File(path).mkdirs();
 
-        // load file (basic file stuff)
+        // file name
         logFileName = "log_" + LocalDate.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         System.out.println( path + File.separator + logFileName);
         logFile = new File(path + File.separator + logFileName );
+
+        // load file
         try {
             if (logFile.createNewFile()) {
                 System.out.println("[ProxyChat] [log] new log file created: " + logFileName);
