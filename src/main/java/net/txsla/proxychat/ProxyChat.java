@@ -16,6 +16,7 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class ProxyChat {
     public static Path dir;
     public static ProxyServer proxy;
     private static YamlDocument config;
+    public static boolean xProxyEnabled;
     @Inject
     public ProxyChat(ProxyServer thisProxy, Logger logger, @DataDirectory Path dataDir) {
         proxy = thisProxy; // I promise this is best practice
@@ -81,6 +83,8 @@ public class ProxyChat {
             }
             ranks.loadRanks();
         }
+
+        if (xProxyEnabled) initialiseXProxy();
     }
 
     @Subscribe // < --- sub to my YouTube also :) {I do not ever post though so don't expect much}
@@ -92,6 +96,7 @@ public class ProxyChat {
     }
     public void loadConfigs() {
         // load global config vars
+        xProxyEnabled = config.getBoolean("xProxy.enabled");
         format.format = config.getString("message-format");
         proxyName = config.getString("proxy-name");
         send.reportFailedMessages = config.getBoolean("reportFailedMessages");
@@ -131,5 +136,25 @@ public class ProxyChat {
             send.channel.add(config.getStringList("channels." + x)); x++;
 
         }
+    }
+    public static void initialiseXProxy() {
+        String password = config.getString("xProxy.password"); // set to a SECURE PASSWORD, as of night now, there is NO BRUTE FORCE PROTECTION
+        String ip = config.getString("xProxy.xProxy-server-ip");
+        int port = config.getInt("xProxy.xProxy-server-port"); // DO NOT PORT FORWARD UNLESS YOU KNOW *EXACTLY* WHAT YOU ARE DOING
+
+        // xProxy Thread (I pinky promise this is best practice and not some old recycled code)
+        System.out.println("[ProxyChat] starting xProxy client");
+        new Thread(() -> {
+            Socket socket = null;
+            try {
+                socket = new Socket(ip, port);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            xProxyClient client = new xProxyClient(socket, proxyName, password);
+            client.listener();
+            client.send();
+            xProxyClient.out = ("con¦" + password);
+        }).start();
     }
 }

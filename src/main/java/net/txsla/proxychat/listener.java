@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class listener {
     @Subscribe
-    public void onPlayerMessage(PlayerChatEvent event) throws IOException {
+    public void onPlayerMessage(PlayerChatEvent event) {
         // get sender info
         Player sender = event.getPlayer();
         String message = event.getMessage();
@@ -38,10 +38,15 @@ public class listener {
         // send message to server channel
         send.messageChannel(server, format.playerMessage(sender, message));
 
-        if (log.enabled) {
-            //log the message
-            log.add( "[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> : " + message);
-        }
+        // log message to file
+        if (log.enabled) log.add( "[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> : " + message);
+
+        // send to xProxy
+        send.messageXProxy(
+                sender.getCurrentServer().get().getServerInfo().getName(),
+                sender.getUsername(),
+                sender.getUniqueId().toString(),
+                message);
     }
     @Subscribe
     public void onPlayerJoin(LoginEvent event) {

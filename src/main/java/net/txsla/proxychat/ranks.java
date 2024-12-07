@@ -37,9 +37,14 @@ public class ranks {
     }
     public static Rank getRank(Player player) {
         for (Rank rank : ranks) {
-            if ( rank.getPlayers().contains(player.getUsername()) ) {
-                return rank;
-            }
+            if ( rank.getPlayers().contains(player.getUsername())) return rank;
+        }
+        // return default rank if no rank was found
+        return defaultRank;
+    }
+    public static Rank getRank(String username) {
+        for (Rank rank : ranks) {
+            if ( rank.getPlayers().contains(username)) return rank;
         }
         // return default rank if no rank was found
         return defaultRank;

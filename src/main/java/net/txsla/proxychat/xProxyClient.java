@@ -56,11 +56,8 @@ public class xProxyClient {
                 while (socket.isConnected() ) {
                     try {
                         recievedData = bufferedReader.readLine();
-                        in = recievedData;
-
-                        // debug : remove later
-                        System.out.println("[xProxy] recievedData = " + recievedData);
-
+                        // make your own method to handle the data (make sure to async the method)
+                        xProxy.receive(recievedData);
                     } catch (Exception e) {
                         closeClient(socket, bufferedReader, bufferedWriter);
                     }

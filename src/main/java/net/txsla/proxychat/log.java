@@ -16,14 +16,18 @@ public class log {
     static String path;
     static String logFileName;
     static boolean enabled;
-    public static void add(String message) throws IOException {
+    public static void add(String message) {
         // log text to file
-        BufferedWriter out = new BufferedWriter(new FileWriter(logFile, true) );
-        out.write(
-                "[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "] "
-                + message + "\n"
-        );
-        out.close();
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(logFile, true));
+            out.write(
+                    "[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "] "
+                            + message + "\n"
+            );
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public static void loadLogFile() throws IOException {
         path = System.getProperty("user.dir") + File.separator + ProxyChat.dir + File.separator +  "logs";

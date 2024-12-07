@@ -6,6 +6,7 @@ file-version: 1
 #   [  PROXYCHAT  ]
 #   [=============]
 
+# can be formatted (this is used to fill %proxy-name%)
 proxy-name: "Main-Velocity-Proxy"
 
 # [ MESSAGE FORMAT ]
@@ -72,7 +73,7 @@ log-messages: true
 # allow multiple instances of ProxyChat to communicate
 # useful for servers with multiple proxies
 xProxy:
-  enable: false
+  enabled: false
   xProxy-server-ip: '127.0.0.1'
   xProxy-server-port: 25599
   password: "P@ssword" # set to same value as in xProxy config

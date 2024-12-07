@@ -15,24 +15,18 @@ public class spamLimiter {
 
     public static void addPlayer(Player player) {
         // do NOT add if player is already added to counter/index
+        // currently this uses the player object to reset the counter after each rejoin -
+        // switch to player name or UUID to keep it persistent (add a count reset command when command system is implemented)
         if (index.contains(player)) return;
         // set info
         index.add(player);
         counter.add(0);
     }
     public static void inc(Player player, int i) {
-        // set to a negative number to subtract
-        // simplify down to 1 line later (no need to store an int)
-        int x = index.indexOf(player);
-        counter.set(x, counter.get(x) + i);
-
-        // for debug - remove later
-        System.out.println("incrementing " + index.get(x) + "'s counter by " + i + " : " + counter.get(x));
+        counter.set(index.indexOf(player), counter.get(index.indexOf(player)) + i);
     }
     public static boolean canChat(Player player) {
-        // simplify down to 1 line later (no need to store an int)
-        int x = index.indexOf(player);
-        return counter.get(x) <= maxCounter;
+        return counter.get(index.indexOf(player)) <= maxCounter;
     }
     public static void startDecTimer() {
         Thread dec = new Thread(()->
@@ -51,8 +45,6 @@ public class spamLimiter {
                         for (int count : counter) {
                             // decrement if counter is above 0
                             if (counter.get(i) > 0) counter.set(i, count-1);
-                            // debug, remove later
-                            System.out.println("decramenting " + index.get(i).getUsername() + "'s counter : " + counter.get(i));
                             i++;
                         }
                     }

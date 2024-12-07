@@ -17,4 +17,16 @@ public class format {
                 .replaceAll("%prefix%", ranks.getPrefix(player))
                 .replaceAll("%message%", Matcher.quoteReplacement(message));
     }
+    public static String xProxyMessage(String proxy, String server, String sender, String UUID, String chatMessage) {
+        String formattedMessage = format;
+
+        // replace placeholders
+        return formattedMessage
+                .replaceAll("%server%", server)
+                .replaceAll("%player%", sender)
+                .replaceAll("%proxy%", proxy)
+                .replaceAll("%prefix%", ranks.getRank(sender).getPrefix() )
+                .replaceAll("%message%", chatMessage);
+        // idk why the UUID is requested, but it is in the old protocol I wrote, so here it stays
+    }
 }
