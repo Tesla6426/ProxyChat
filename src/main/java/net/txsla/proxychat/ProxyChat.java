@@ -112,6 +112,14 @@ public class ProxyChat {
                 ranks.rankSystem = 0;
                 break;
         }
+        // spam filter
+        spamLimiter.enabled = config.getBoolean("spam-limiter.enabled");
+        if (spamLimiter.enabled)
+        {
+            spamLimiter.decTimer = config.getInt("spam-limiter.decrement-timer");
+            spamLimiter.maxCounter = config.getInt("spam-limiter.counter-ceiling");
+            spamLimiter.startDecTimer();
+        }
     }
     public void loadChannels() {
         // accounts for channel 0 (skips null check)

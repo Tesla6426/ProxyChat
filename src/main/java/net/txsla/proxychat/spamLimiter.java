@@ -11,6 +11,7 @@ public class spamLimiter {
     static List<Integer> counter = new ArrayList<>();
     static int maxCounter;
     static int decTimer;
+    static boolean enabled;
 
     public static void addPlayer(Player player) {
         // do NOT add if player is already added to counter/index
@@ -24,8 +25,11 @@ public class spamLimiter {
         // simplify down to 1 line later (no need to store an int)
         int x = index.indexOf(player);
         counter.set(x, counter.get(x) + i);
+
+        // for debug - remove later
+        System.out.println("incrementing " + index.get(x) + "'s counter by " + i + " : " + counter.get(x));
     }
-    public boolean canChat(Player player) {
+    public static boolean canChat(Player player) {
         // simplify down to 1 line later (no need to store an int)
         int x = index.indexOf(player);
         return counter.get(x) <= maxCounter;
@@ -34,6 +38,9 @@ public class spamLimiter {
         Thread dec = new Thread(()->
                 {
                     int i =0;
+                    // debug, remove later
+                    System.out.println("dec timer started");
+
                     while (true) {
                         i = 0;
                         // wait
@@ -42,10 +49,12 @@ public class spamLimiter {
 
                         // decrement one from everyone's chat timer
                         for (int count : counter) {
-                            counter.set(i, count-1);
+                            // decrement if counter is above 0
+                            if (counter.get(i) > 0) counter.set(i, count-1);
+                            // debug, remove later
+                            System.out.println("decramenting " + index.get(i).getUsername() + "'s counter : " + counter.get(i));
                             i++;
                         }
-
                     }
                 }
                 );

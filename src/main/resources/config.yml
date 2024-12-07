@@ -63,9 +63,8 @@ reportFailedMessages: true
 # if a player hits the max messages on their counter, their  messages are not shown to other players
 spam-limiter:
   enabled: true
-  counter-ceiling: 3 # if a player's message counter goes above this number, their messages will be hidden to other players
+  counter-ceiling: 5 # if a player's message counter goes above this number, their messages will be hidden to other players
   decrement-timer: 4000 # milliseconds between message counter decrements
-  relay-back-to-player: true # show the spammer their messages, so they cannot tell they are being ignored
 # logs are stored in /plugins/ProxyChat/logs/log_mm-dd-yyyy.txt
 log-messages: true
 
