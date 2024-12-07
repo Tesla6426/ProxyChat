@@ -5,14 +5,13 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class xProxyClient {
     public final String xProxyClientVersion = "0.1";
     private Socket socket;
     private BufferedWriter bufferedWriter;
     private BufferedReader bufferedReader;
-    private String clientName, ip, port, password;
+    private String clientName, password;
     public static String in, out;
     public static String sep = "¦";
 

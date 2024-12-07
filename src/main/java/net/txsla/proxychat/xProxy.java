@@ -1,6 +1,5 @@
 package net.txsla.proxychat;
 
-import java.io.IOException;
 import java.util.Base64;
 
 import static java.lang.System.out;

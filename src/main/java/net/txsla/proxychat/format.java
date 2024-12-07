@@ -1,7 +1,6 @@
 package net.txsla.proxychat;
 
 import com.velocitypowered.api.proxy.Player;
-
 import java.util.regex.Matcher;
 
 public class format {

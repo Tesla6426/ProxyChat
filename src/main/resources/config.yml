@@ -53,6 +53,7 @@ channels:
   7:
   8:
 # if you ever need more than 8 channels then just add more to the config
+# remind me to add regex parsing to the server names (to allow shit like lobby-[0-9] )
 
 # Reports failed to send messages to console
 # (it is only recommended to disable this if you are muting a server on purpose)

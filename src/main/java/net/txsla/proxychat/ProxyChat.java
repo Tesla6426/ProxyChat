@@ -145,7 +145,7 @@ public class ProxyChat {
         // xProxy Thread (I pinky promise this is best practice and not some old recycled code)
         System.out.println("[ProxyChat] starting xProxy client");
         new Thread(() -> {
-            Socket socket = null;
+            Socket socket;
             try {
                 socket = new Socket(ip, port);
             } catch (IOException e) {

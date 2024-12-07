@@ -6,8 +6,6 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
-import java.io.IOException;
-
 public class listener {
     @Subscribe
     public void onPlayerMessage(PlayerChatEvent event) {
@@ -19,8 +17,12 @@ public class listener {
         // repeat messages to console (toggled in configs)
         System.out.println("[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
 
+        // apparently this no longer works :/
+        // I will have to cancel the message server-side
+        /*
         //cancel event as to not double-send the message to players
         event.setResult(PlayerChatEvent.ChatResult.denied());
+         */
 
         if (spamLimiter.enabled) {
             // increment chat counter
