@@ -25,8 +25,8 @@ public class xProxy {
                                 String[] msg = b64data.split("¦");
                                 send.messageChannel( msg[1], format.xProxyMessage(msg[0], msg[1], msg[2], msg[3], msg[4]) );
                                 // relay to console
-                                out.println("[xProxy] [" + msg[0] + "] [" + msg[1] + "] <" + msg[2] + "> " + msg[4]);
-                                if (log.enabled) log.add( "[xProxy] [" + msg[0] + "] [" + msg[1] + "] <" + msg[2] + "> " + msg[4]);
+                                out.println("[" + msg[0] + "] [" + msg[1] + "] <" + msg[2] + "> " + msg[4]);
+                                if (log.enabled) log.add( "[" + msg[0] + "] [" + msg[1] + "] <" + msg[2] + "> " + msg[4]);
                             }
                             break;
                         case "other":
