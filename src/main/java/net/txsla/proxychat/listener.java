@@ -17,7 +17,7 @@ public class listener {
         // repeat messages to console (toggled in configs)
         System.out.println("[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
 
-        // apparently this no longer works :/
+        // apparently this no longer works (thank you microsoft for signed messages)
         // I will have to cancel the message server-side
         /*
         //cancel event as to not double-send the message to players
