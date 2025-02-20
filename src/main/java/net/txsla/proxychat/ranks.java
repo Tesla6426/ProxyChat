@@ -19,7 +19,7 @@ public class ranks {
     public static void loadRanks() {
         switch (rankSystem) {
             case 1:
-                System.out.println("[ProxyChat] Loading ProxyChat Ranks...");
+                System.out.println("[ProxyChat] Loading Ranks...");
                 loadProxyChatRanks();
                 break;
             default:

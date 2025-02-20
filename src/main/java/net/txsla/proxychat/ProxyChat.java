@@ -38,7 +38,7 @@ public class ProxyChat {
         proxy = thisProxy; // I promise this is best practice
         dir = dataDir;
         try {
-            // config file magic (I followed a tutorial for this one as I would rather eat glass than read more documentation)
+            // config file magic (I followed a tutorial for this one and I would rather eat glass than read more documentation)
             config = YamlDocument.create(new File(dataDir.toFile(), "config.yml"),
                     Objects.requireNonNull(getClass().getResourceAsStream("/config.yml")),
                     GeneralSettings.DEFAULT,
@@ -77,7 +77,8 @@ public class ProxyChat {
                 ranks.ranksConfig.save();
             }
             catch (Exception e) {
-                System.out.println("[ProxyChat] Failed to load ProxyChat Ranks Config!");
+                System.out.println("\n\n" + e);
+                System.out.println("[ProxyChat] [ERROR] Failed to load ProxyChat Ranks Config!\n\n");
                 // disable ranks
                 ranks.rankSystem = 0;
             }

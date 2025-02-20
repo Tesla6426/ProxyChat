@@ -14,7 +14,7 @@ public class listener {
         String message = event.getMessage();
         RegisteredServer server = sender.getCurrentServer().get().getServer();
 
-        // repeat messages to console (toggled in configs)
+        // repeat messages to console (make toggle in configs)
         System.out.println("[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
 
         // apparently this no longer works (thank you microsoft for signed messages)
@@ -23,6 +23,14 @@ public class listener {
         //cancel event as to not double-send the message to players
         event.setResult(PlayerChatEvent.ChatResult.denied());
          */
+        if (mute.isMuted(sender.getUniqueId()) ) {
+            // cancel sending message as player is muted
+
+            // let player know they are muted
+
+            return;
+        }
+
 
         if (spamLimiter.enabled) {
             // increment chat counter
