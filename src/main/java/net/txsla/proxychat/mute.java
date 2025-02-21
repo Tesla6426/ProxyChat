@@ -64,7 +64,6 @@ public class mute {
         muteConfig.set("punishment-info." +username+".muted-by", mute_enforcer);
         muteConfig.set("punishment-info." +username+".reason", reason);
 
-        // log action
         muteLog( username + " (" + uuid + ") was muted by " + mute_enforcer + "for " + reason);
 
         // save
@@ -74,10 +73,7 @@ public class mute {
             System.out.println(e + "\n[ProxyChat] Error saving mute config!");
             return false;
         }
-
-        // reload mute list in RAM
         loadMuteList();
-
         return true;
     }
     public static boolean unmutePlayer(String username) {

@@ -123,7 +123,6 @@ public class ProxyChat {
 
         // load commands
         CommandManager commandManager = proxy.getCommandManager();
-        // commandManager.register(commandManager.metaBuilder("COMMAND_NAME").plugin(this).build(), net.txsla.proxychat.commands.mute.COMMAND_CLASS(proxy) );
         commandManager.register(commandManager.metaBuilder("mute").plugin(this).build(), net.txsla.proxychat.commands.mute.muteCommand(proxy) );
         commandManager.register(commandManager.metaBuilder("mute-list").plugin(this).build(), net.txsla.proxychat.commands.mute_list.muteListCommand(proxy) );
         commandManager.register(commandManager.metaBuilder("mute-status").plugin(this).build(), net.txsla.proxychat.commands.mute_status.muteStatusCommand(proxy) );

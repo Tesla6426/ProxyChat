@@ -17,35 +17,19 @@ public class listener {
         // repeat messages to console (make toggle in configs)
         System.out.println("[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> " + message );
 
-        // apparently this no longer works (thank you microsoft for signed messages)
-        // I will have to cancel the message server-side
-        /*
-        //cancel event as to not double-send the message to players
-        event.setResult(PlayerChatEvent.ChatResult.denied());
-         */
-        if (mute.isMuted(sender.getUniqueId()) || mute.isMuted(sender.getUsername())) {
-            // cancel sending message as player is muted
-            return;
-        }
+        if (mute.isMuted(sender.getUniqueId()) || mute.isMuted(sender.getUsername())) return;
 
 
         if (spamLimiter.enabled) {
-            // increment chat counter
             spamLimiter.inc(sender, 1);
-
-            // check if player's messages should be ignored
             if (!spamLimiter.canChat(sender)) {
                 // shows the spammer their own messages, so they do not know they are being ignored
-                // also skips logging the message
                 send.messagePlayer(sender, format.playerMessage(sender, message) );
                 return;
             }
         }
 
-        // send message to server channel
         send.messageChannel(server, format.playerMessage(sender, message));
-
-        // log message to file
         if (log.enabled) log.add( "[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> : " + message);
 
         // send to xProxy

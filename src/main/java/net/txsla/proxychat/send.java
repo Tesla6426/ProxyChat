@@ -76,9 +76,7 @@ public class send {
     }
     public static int getChannel(String serverName) {
         for (int i = 0; i < channel.size(); i++) {
-            if (channel.get(i).contains(serverName)) {
-                return i;
-            }
+            if (channel.get(i).contains(serverName)) return i;
         }
         if (reportFailedMessages) System.out.println("Server " + serverName + " is not in a channel - messages will not be sent");
         return -1;

@@ -24,7 +24,6 @@ public class ranks {
                 break;
             default:
                 System.out.println("[ProxyChat] Ranks are Disabled");
-                return;
         }
     }
     public static Rank getRank(Player player) {
@@ -35,9 +34,7 @@ public class ranks {
         return defaultRank;
     }
     public static Rank getRank(String username) {
-        for (Rank rank : ranks) {
-            if ( rank.getPlayers().contains(username)) return rank;
-        }
+        for (Rank rank : ranks) if ( rank.getPlayers().contains(username)) return rank;
         // return default rank if no rank was found
         return defaultRank;
     }

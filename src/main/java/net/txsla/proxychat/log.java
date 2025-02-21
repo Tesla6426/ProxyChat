@@ -17,19 +17,12 @@ public class log {
         // log text to file
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(logFile, true));
-            out.write(
-                    "[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "] "
-                            + message + "\n"
-            );
+            out.write("[" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "] " + message + "\n");
             out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
     public static void loadLogFile() throws IOException {
         path = System.getProperty("user.dir") + File.separator + ProxyChat.dir + File.separator +  "logs";
-
-        // make sure folders exists :skull:
         new File(path).mkdirs();
 
         // file name
