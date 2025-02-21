@@ -109,6 +109,9 @@ public class ProxyChat {
             System.out.println("[ProxyChat] [ERROR] Failed to load Mute Config!\n==========\n");
         }
 
+        mute.requireReason = mute.muteConfig.getBoolean("require-reason");
+        mute.loadMuteList();
+
         // start xProxy client if applicable
         if (xProxyEnabled) initialiseXProxy();
     }
@@ -120,10 +123,10 @@ public class ProxyChat {
 
         // load commands
         CommandManager commandManager = proxy.getCommandManager();
-        CommandMeta commandMeta = commandManager.metaBuilder("mute").plugin(this).build();
+        // commandManager.register(commandManager.metaBuilder("COMMAND_NAME").plugin(this).build(), net.txsla.proxychat.commands.mute.COMMAND_CLASS(proxy) );
+        commandManager.register(commandManager.metaBuilder("mute").plugin(this).build(), net.txsla.proxychat.commands.mute.muteCommand(proxy) );
+        commandManager.register(commandManager.metaBuilder("mute-list").plugin(this).build(), net.txsla.proxychat.commands.mute_list.muteListCommand(proxy) );
 
-        BrigadierCommand muteCommand = net.txsla.proxychat.commands.mute.muteCommand(proxy);
-        commandManager.register(commandMeta, muteCommand );
     }
     public void loadConfigs() {
         // load global config vars

@@ -23,11 +23,8 @@ public class listener {
         //cancel event as to not double-send the message to players
         event.setResult(PlayerChatEvent.ChatResult.denied());
          */
-        if (mute.isMuted(sender.getUniqueId()) ) {
+        if (mute.isMuted(sender.getUniqueId()) || mute.isMuted(sender.getUsername())) {
             // cancel sending message as player is muted
-
-            // let player know they are muted
-
             return;
         }
 

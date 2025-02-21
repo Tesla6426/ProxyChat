@@ -11,9 +11,14 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.text.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class mute {
+    public static BrigadierCommand muteCommandSwap (final ProxyServer proxy) {
+        //no?
+        return null;
+    }
     public static BrigadierCommand muteCommand (final ProxyServer proxy) {
         // still trying to understand this
         LiteralCommandNode<CommandSource> muteCommandNode = LiteralArgumentBuilder.<CommandSource>literal("mute")
@@ -28,8 +33,8 @@ public class mute {
                     return true;
                 })
                 */
-
-                .then(RequiredArgumentBuilder.<CommandSource, String>argument("arg", StringArgumentType.word())
+                // 1st arg processor
+                .then(RequiredArgumentBuilder.<CommandSource, String>argument("mute_player", StringArgumentType.word())
                         // command autocomplete
                         .suggests((ctx, builder) -> {
                             // get all players on proxy
@@ -39,7 +44,7 @@ public class mute {
                             players.forEach(player -> {
                                 try {
                                     // get argument
-                                    String argument = ctx.getArgument("arg", String.class);
+                                    String argument = ctx.getArgument("mute_player", String.class);
                                     // autocomplete player usernames
                                     if (player.getUsername().startsWith(argument)) {
                                         builder.suggest(player.getUsername());
@@ -53,31 +58,64 @@ public class mute {
                             // return autocomplete
                             return builder.buildFuture();
 
-                        }).executes(context -> {
-                            // check if sender is a player
-                            if (!(context.getSource() instanceof Player)) {
-                                context.getSource().sendMessage(Component.text("You must be a player to execute this command"));
-                                return 0;
-                            }
+                        })
+                        .executes(context -> {
+                            context.getSource().sendMessage(Component.text("/mute <player> <duration> <reason>"));
+                            return 0;
+                        })
+                        // duration layer
+                        .then(RequiredArgumentBuilder.<CommandSource, String>argument("duration", StringArgumentType.word())
+                            .suggests(((context, builder) -> {
+                                // list of durations available
+                                ArrayList<String> durations = new ArrayList<>();
+                                durations.add("m"); // minutes
+                                durations.add("h"); // hours
+                                durations.add("d"); // days
+                                durations.add("w"); // weeks
+                                durations.add("y"); // years
 
-                            // get argument
-                            String argumentProvided = context.getArgument("arg", String.class);
-
-                            // tell sender it was successful
-                            Player sender = (Player) context.getSource();
-                            sender.sendMessage(Component.text("Player " + argumentProvided + "muted"));
-
-                            return Command.SINGLE_SUCCESS;
-
+                                durations.forEach(duration -> {
+                                        // append suggested duration if player is typing it
+                                    try {
+                                        String arg = context.getArgument("duration", String.class).toLowerCase();
+                                        if (arg.matches("[0-9]+")) {
+                                            builder.suggest(arg + duration);
+                                        }
+                                    } catch (IllegalArgumentException e) {
+                                        builder.suggest("<int>" + duration);
+                                    }
+                                });
+                                        return builder.buildFuture();
                         }))
-                // I have no clue what the fuck this second execute block does
+                                .executes(context -> {
+                                    if (net.txsla.proxychat.mute.requireReason) {
+                                        context.getSource().sendMessage(Component.text("Incorrect usage: A reason is needed to mute a player"));
+                                        context.getSource().sendMessage(Component.text("/mute <player> <duration> <reason>"));
+                                        return 0;
+                                    }
+                                    context.getSource().sendMessage(Component.text("Player Muted!!!!"));
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                        // reason layer (final layer)
+                            .then(RequiredArgumentBuilder.<CommandSource, String>argument("reason", StringArgumentType.greedyString())
+                                    .executes(context -> {
+                                        String sender = "[@]";
+                                        String muted_player = context.getArgument("mute_player", String.class);
+                                        String duration = context.getArgument("duration", String.class);
+                                        String reason = context.getArgument("reason", String.class);
+                                        if (context.getSource() instanceof Player) {
+                                            sender = ((Player) context.getSource()).getUsername();
+                                        }
+                                        net.txsla.proxychat.mute.mutePlayer(muted_player, sender, reason, duration);
+                                        // tell sender it was successful
+                                        context.getSource().sendMessage(Component.text("Player " + muted_player + " muted for " + duration));
+                                        return Command.SINGLE_SUCCESS;
+
+                        }))))
+                // executes when NO args
                 .executes(context -> {
-                    // check if sender is a player
-                    if (!(context.getSource() instanceof Player)) {
-                        context.getSource().sendMessage(Component.text("You must be a player to execute this command"));
+                        context.getSource().sendMessage(Component.text("/mute <player> <duration> <reason>"));
                         return 0;
-                    }
-                    return Command.SINGLE_SUCCESS;
                 })
                 // build (yay) :)
                 .build();

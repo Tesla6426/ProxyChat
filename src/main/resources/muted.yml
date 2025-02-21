@@ -1,8 +1,10 @@
 # do not touch this value
 file-version: 1
 
-# List of players and dates they are muted until
-# in chronological order :)
+# do you want to require admins to give a reason when they mute players?
+require-reason: false
+
+# List of players muted
 mute-list:
   - mutedplayer1
 
