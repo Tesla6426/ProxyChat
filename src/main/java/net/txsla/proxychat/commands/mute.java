@@ -106,10 +106,16 @@ public class mute {
                                         if (context.getSource() instanceof Player) {
                                             sender = ((Player) context.getSource()).getUsername();
                                         }
-                                        net.txsla.proxychat.mute.mutePlayer(muted_player, sender, reason, duration);
+
+                                        // mute player
+                                        if ( net.txsla.proxychat.mute.mutePlayer(muted_player, sender, reason, duration) ) {
+                                            // if successful, tell player
+                                            context.getSource().sendMessage(Component.text("Player " + muted_player + " muted for " + duration));
+                                            return Command.SINGLE_SUCCESS;
+                                        }
                                         // tell sender it was successful
-                                        context.getSource().sendMessage(Component.text("Player " + muted_player + " muted for " + duration));
-                                        return Command.SINGLE_SUCCESS;
+                                        context.getSource().sendMessage(Component.text("Failed to mute player: check command syntax"));
+                                        return 0;
 
                         }))))
                 // executes when NO args

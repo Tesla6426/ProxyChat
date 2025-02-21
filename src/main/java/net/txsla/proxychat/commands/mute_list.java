@@ -37,7 +37,6 @@ public class mute_list {
                              "uuid: " + net.txsla.proxychat.mute.getMuteUUIDList() ));
                        return Command.SINGLE_SUCCESS;
                  })
-
                 .build();
 
         return new BrigadierCommand(muteListCommandNode);

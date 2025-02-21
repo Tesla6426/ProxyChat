@@ -80,10 +80,16 @@ public class mute {
 
         return true;
     }
-    public static boolean unmutePlayer() {
-        // false = unsuccessful (player was never muted?)
-        // true = successfully unmuted player
-        return false;
+    public static boolean unmutePlayer(String username) {
+        if (!isMuted(username)) return false;
+        try {
+            List<String> mute_list = muteConfig.getStringList("mute-list");
+            mute_list.remove(username);
+            muteConfig.set("mute-list", mute_list);
+            muteConfig.save();
+            loadMuteList();
+        } catch (Exception e) {System.out.println(e); return false;}
+        return true;
     }
     public static String getMuteNameList() {
         String mute_list = "[";
@@ -96,6 +102,7 @@ public class mute {
         return mute_list.replaceAll(", $", "") + "]";
     }
     public static String muteInfo(String username) {
+        Date date = new Date();
         // return info on a player's mute status
         boolean is_muted = isMuted(username);
         String mute_info =
@@ -103,9 +110,14 @@ public class mute {
                 "is_muted: " + is_muted + "\n";
         if (is_muted) {
             // return further info if player is, in fact, muted
+            long issued = muteConfig.getLong("punishment-info."+username+".time-muted");
+            long until = muteConfig.getLong("punishment-info."+username+".muted-until");
+            double days_left = (until - date.getTime()) * 0.000000011574074;
             mute_info +=
-                    "date-issued: " + muteConfig.get("punishment-info."+username+".time-muted") + "\n" +
-                    "muted_until: " + muteConfig.get("punishment-info."+username+".muted-until") + "\n" +
+                    "uuid: " + muteConfig.get("punishment-info."+username+".uuid") + "\n" +
+                    "date-issued: " + issued + "\n" +
+                    "muted_until: " + until + "\n" +
+                    "days_left: " + days_left + "\n" +
                     "muted_by: " + muteConfig.get("punishment-info."+username+".muted-by") + "\n" +
                     "reason: " + muteConfig.get("punishment-info."+username+".reason") + "\n";
         }
@@ -113,6 +125,9 @@ public class mute {
     }
 
     public static void loadMuteList() {
+        muted_name = null;
+        muted_uuid = new ArrayList<>();
+
         // (re)load the mute list from config file
         muted_name = muteConfig.getStringList("mute-list");
         for (String s : muted_name) muted_uuid.add((UUID) muteConfig.get("punishment-info." + s + ".uuid"));

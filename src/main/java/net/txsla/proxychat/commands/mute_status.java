@@ -14,10 +14,10 @@ import net.txsla.proxychat.mute;
 
 import java.util.Collection;
 
-public class unmute {
-    public static BrigadierCommand unmuteCommand (final ProxyServer proxy) {
+public class mute_status {
+    public static BrigadierCommand muteStatusCommand (final ProxyServer proxy) {
         // still trying to understand this
-        LiteralCommandNode<CommandSource> unmuteCommandNode = LiteralArgumentBuilder.<CommandSource>literal("unmute")
+        LiteralCommandNode<CommandSource> muteStatusCommandNode = LiteralArgumentBuilder.<CommandSource>literal("mute-status")
                 // check if player has permissions (buggy?)
                 /*
                 .requires(commandSource -> {
@@ -49,21 +49,19 @@ public class unmute {
                             return builder.buildFuture();
                         })
                         .executes(context -> {
-                            if ( net.txsla.proxychat.mute.unmutePlayer( context.getArgument("player", String.class) ) ) {
-                                context.getSource().sendMessage(Component.text("§a" + context.getArgument("player", String.class) + " unmuted!"));
-                                return Command.SINGLE_SUCCESS;
-                            }
-                            context.getSource().sendMessage(Component.text("§cFailed to unmute " + context.getArgument("player", String.class) + "! Is player already unmuted?"));
-                            return 0;
+                            context.getSource().sendMessage(Component.text(
+                                    "§dMute Status:\n" + net.txsla.proxychat.mute.muteInfo( context.getArgument("player", String.class) )
+                                    ));
+                         return Command.SINGLE_SUCCESS;
                         }))
                 .executes(context -> {
-                    // no args
-                    context.getSource().sendMessage(Component.text("/unmute <player>"));
+                    // MO args
+                    context.getSource().sendMessage(Component.text("/mute-status <player>"));
                     return 0;
                 })
                 .build();
 
-        return new BrigadierCommand(unmuteCommandNode);
+        return new BrigadierCommand(muteStatusCommandNode);
     }
 
 }
