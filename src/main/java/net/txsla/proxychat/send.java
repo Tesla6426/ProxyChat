@@ -13,7 +13,7 @@ public class send {
     /*
     To add in the future:
         - move 'LegacyComponentSerializer.legacyAmpersand().deserialize(' to its own method in proxychat.format
-            and allow players to choose the specific formatting that they want
+            and allow users to choose the specific formatting that they want
     */
     public static void messagePlayer(Player player, String message) {
         // send a message to a specific player connected to the proxy

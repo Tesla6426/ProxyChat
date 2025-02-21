@@ -1,6 +1,9 @@
 package net.txsla.proxychat;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.command.BrigadierCommand;
+import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.plugin.Plugin;
@@ -75,6 +78,7 @@ public class ProxyChat {
                 );
                 ranks.ranksConfig.update();
                 ranks.ranksConfig.save();
+                System.out.println("[ProxyChat] Ranks Config Loaded!");
             }
             catch (Exception e) {
                 System.out.println("\n\n" + e);
@@ -85,15 +89,41 @@ public class ProxyChat {
             ranks.loadRanks();
         }
 
+        // Mute Config
+        System.out.println("[ProxyChat] Loading Mute Config...");
+        try {
+            // load mute config file
+            mute.muteConfig = YamlDocument.create(new File(ProxyChat.dir.toFile(), "muted.yml"),
+                    Objects.requireNonNull(getClass().getResourceAsStream("/muted.yml")),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("file-version")).setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+            );
+            mute.muteConfig.update();
+            mute.muteConfig.save();
+            System.out.println("[ProxyChat] Mute Config Loaded!");
+        }
+        catch (Exception e) {
+            System.out.println("\n==========\n" + e);
+            System.out.println("[ProxyChat] [ERROR] Failed to load Mute Config!\n==========\n");
+        }
+
+        // start xProxy client if applicable
         if (xProxyEnabled) initialiseXProxy();
     }
 
     @Subscribe // < --- sub to my YouTube also :) {I do not ever post though so don't expect much}
     public void onProxyInitialization(ProxyInitializeEvent event) {
-
         proxy.getEventManager().register(this, new listener());
         loadChannels();
 
+        // load commands
+        CommandManager commandManager = proxy.getCommandManager();
+        CommandMeta commandMeta = commandManager.metaBuilder("mute").plugin(this).build();
+
+        BrigadierCommand muteCommand = net.txsla.proxychat.commands.mute.muteCommand(proxy);
+        commandManager.register(commandMeta, muteCommand );
     }
     public void loadConfigs() {
         // load global config vars

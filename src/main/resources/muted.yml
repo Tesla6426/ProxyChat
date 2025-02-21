@@ -1,9 +1,10 @@
+# do not touch this value
+file-version: 1
+
 # List of players and dates they are muted until
 # in chronological order :)
-
 mute-list:
   - mutedplayer1
-  -
 
 punishment-info:
   # name of player punished
@@ -13,10 +14,8 @@ punishment-info:
     # datetime when the mute was
     datetime-muted: null
     # datetime when player is unmuted - requires the muted player to send a message to trigger
-    muted-until:
+    muted-until: null
     # admin who muted the player
-    muted-by: "default"
+    muted-by: admin
     # mute reason
-    reason: "demonstrate config"
-    # whether the player is informed of their mute
-    ghosted: true
+    reason: to demonstrate config
