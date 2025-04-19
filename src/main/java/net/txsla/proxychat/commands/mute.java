@@ -93,7 +93,7 @@ public class mute {
                                         context.getSource().sendMessage(Component.text("/mute <player> <duration> <reason>"));
                                         return 0;
                                     }
-                                    context.getSource().sendMessage(Component.text("Player Muted!!!!"));
+                                    context.getSource().sendMessage(Component.text("Player Muted!"));
                                     return Command.SINGLE_SUCCESS;
                                 })
                         // reason layer (final layer)

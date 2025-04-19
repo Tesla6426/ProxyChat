@@ -4,10 +4,12 @@ file-version: 1
 # do you want to require admins to give a reason when they mute players?
 require-reason: false
 
-# List of players muted
+# List of players currently muted
 mute-list:
   - mutedplayer1
 
+# list of mute details
+# A player being listed here does not mean they are muted
 punishment-info:
   # name of player punished
   mutedplayer1:

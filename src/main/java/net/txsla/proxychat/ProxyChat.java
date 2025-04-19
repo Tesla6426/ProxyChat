@@ -1,9 +1,7 @@
 package net.txsla.proxychat;
 
 import com.google.inject.Inject;
-import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandManager;
-import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.plugin.Plugin;
@@ -34,7 +32,7 @@ public class ProxyChat {
     @Inject
     public static Path dir;
     public static ProxyServer proxy;
-    private static YamlDocument config;
+    public static YamlDocument config;
     public static boolean xProxyEnabled;
     @Inject
     public ProxyChat(ProxyServer thisProxy, Logger logger, @DataDirectory Path dataDir) {
@@ -112,6 +110,9 @@ public class ProxyChat {
         mute.requireReason = mute.muteConfig.getBoolean("require-reason");
         mute.loadMuteList();
 
+        // start discord bot
+        net.txsla.proxychat.discord.bot.start();
+
         // start xProxy client if applicable
         if (xProxyEnabled) initialiseXProxy();
     }
@@ -128,10 +129,18 @@ public class ProxyChat {
         commandManager.register(commandManager.metaBuilder("mute-status").plugin(this).build(), net.txsla.proxychat.commands.mute_status.muteStatusCommand(proxy) );
         commandManager.register(commandManager.metaBuilder("unmute").plugin(this).build(), net.txsla.proxychat.commands.unmute.unmuteCommand(proxy) );
     }
+
+    // load misc config vars - I will most likely clean this up in a later update
     public void loadConfigs() {
         // load global config vars
         xProxyEnabled = config.getBoolean("xProxy.enabled");
-        format.format = config.getString("message-format");
+
+        format.message_format = config.getString("message-format");
+        format.leave_format = config.getString("join-messages.leave-format");
+        format.join_format = config.getString("join-messages.join-format");
+        format.dc2mc_format = config.getString("");
+        format.mc2dc_format = config.getString("");
+
         proxyName = config.getString("proxy-name");
         send.reportFailedMessages = config.getBoolean("reportFailedMessages");
         log.enabled = config.getBoolean("log-messages");
@@ -160,6 +169,8 @@ public class ProxyChat {
             spamLimiter.startDecTimer();
         }
     }
+
+    // Load channels from config into ram
     public void loadChannels() {
         // accounts for channel 0 (skips null check)
         send.channel.add( config.getStringList("channels.0") );
@@ -168,9 +179,10 @@ public class ProxyChat {
         int x = 1;
         while (!config.getStringList("channels." + x).isEmpty()) {
             send.channel.add(config.getStringList("channels." + x)); x++;
-
         }
     }
+
+    // Connect to an XProxy server if enabled
     public static void initialiseXProxy() {
         String password = config.getString("xProxy.password"); // set to a SECURE PASSWORD, as of night now, there is NO BRUTE FORCE PROTECTION
         String ip = config.getString("xProxy.xProxy-server-ip");

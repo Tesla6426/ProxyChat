@@ -44,4 +44,6 @@ public class listener {
         // add player to spam list, no need for bypass if configured correctly
         if (spamLimiter.enabled) spamLimiter.addPlayer(event.getPlayer());
     }
+    @Subscribe
+    public void onPlayerADS() {}
 }

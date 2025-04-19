@@ -19,6 +19,19 @@ proxy-name: "Main-Velocity-Proxy"
 # %proxy-name% = name of proxy
 message-format: "&7[&a%server%&7] %prefix% %player% &f: %message%"
 
+# This plugin uses minimessage formatting by default
+# Setting this to true will use legacy formatting instead ( &x formatting )
+legacy-formatting: false
+
+# Format for player join/leave messages
+# These are relayed to the discord if both are enabled
+# %PLAYER% is the placeholder for the player's name
+join-messages:
+  enabled: true
+  relay-to-discord: false
+  join-format: "<yellow>%PLAYER% has joined the game!</yellow>"
+  leave-format: "<yellow>%PLAYER% has left the game!</yellow>"
+
 # [ RANKS ]
 # What system do you want to use for visual ranks?
 # Options: ProxyChat, xProxy, none (LuckPerms compatibility soon? [prob not] )
@@ -35,15 +48,20 @@ rank-system: "ProxyChat"
 # Make sure to populate the channels in order ( 1,2,3,4,5...).  {channel 0 is counted separately, it CAN be null}
 # The plugin will stop scanning channels when it reaches an empty channel
 # Servers not listed will have their player chat disabled
+# The 'discord' entry is used to determine what channel to send dc -> mc messages to
+# The 'join-messages' is for join/leave messages
+
 channels:
   0: # put independent servers here (channel 0 is for servers that do NOT share messages)
     - "banned-players" # These three servers will NOT share messages
     - "survival"
     - "creative"
   1:
-    - "lobby_1"  # The three lobbies will share messages
+    - "lobby_1"  # The three lobbies will share messages with each other and with the discord server (only if enabled)
     - "lobby_2"
     - "lobby_3"
+    - "discord"
+    - "join-messages"
   2:
   3:
   4:
@@ -68,6 +86,21 @@ spam-limiter:
   decrement-timer: 4000 # milliseconds between message counter decrements
 # logs are stored in /plugins/ProxyChat/logs/log_mm-dd-yyyy.txt
 log-messages: true
+
+# [ DISCORD ]
+# Use a discord bot to sync messages between your proxy and discord servers
+# Placeholders for message format:
+# dc2mc: (discord to minecraft)
+#   %nickname% - user's discord nickname
+#   %role% - sender's discord role
+discord:
+  enabled: false
+  token: "YOUR-TOKEN-HERE"
+  channel-id: "CHANNEL-ID"
+  message-format-dc2mc: "add foramtting later"
+  message-format-mc2dc: "add formatting later"
+
+
 
 # [ X PROXY ]
 # allow multiple instances of ProxyChat to communicate
