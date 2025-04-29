@@ -20,15 +20,13 @@ public class mute_list {
         LiteralCommandNode<CommandSource> muteListCommandNode = LiteralArgumentBuilder.<CommandSource>literal("mute-list")
 
                 // check if player has permissions (buggy?)
-                /*
                 .requires(commandSource -> {
-                    if (!commandSource.hasPermission("permission.node")) {
-                        commandSource.sendMessage(Component.text("You do not have permission to run this command!"));
+                    if (!commandSource.hasPermission("proxychat.mute")) {
+                        // do nothing if player does not have permission
                         return false;
                     }
                     return true;
                 })
-                */
 
                  .executes(context -> {
                      context.getSource().sendMessage(Component.text(

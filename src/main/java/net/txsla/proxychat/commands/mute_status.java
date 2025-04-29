@@ -19,15 +19,15 @@ public class mute_status {
         // still trying to understand this
         LiteralCommandNode<CommandSource> muteStatusCommandNode = LiteralArgumentBuilder.<CommandSource>literal("mute-status")
                 // check if player has permissions (buggy?)
-                /*
+
                 .requires(commandSource -> {
-                    if (!commandSource.hasPermission("permission.node")) {
-                        commandSource.sendMessage(Component.text("You do not have permission to run this command!"));
+                    if (!commandSource.hasPermission("proxychat.mute")) {
+                        // do nothing if player does not have permission
                         return false;
                     }
                     return true;
                 })
-                */
+
                 .then(RequiredArgumentBuilder.<CommandSource, String>argument("player", StringArgumentType.word())
                         // command autocomplete
                         .suggests((context, builder) -> {

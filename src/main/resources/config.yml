@@ -17,7 +17,7 @@ proxy-name: "Main-Velocity-Proxy"
 # %message% = raw text message from player
 # %server% = server message was sent from
 # %proxy-name% = name of proxy
-message-format: "&7[&a%server%&7] %prefix% %player% &f: %message%"
+message-format: "<grey>[<green>%server%</green>]<grey> %prefix% %player% <white>: %message%"
 
 # This plugin uses minimessage formatting by default
 # Setting this to true will use legacy formatting instead ( &x formatting )
@@ -28,9 +28,9 @@ legacy-formatting: false
 # %PLAYER% is the placeholder for the player's name
 join-messages:
   enabled: true
-  relay-to-discord: false
-  join-format: "<yellow>%PLAYER% has joined the game!</yellow>"
-  leave-format: "<yellow>%PLAYER% has left the game!</yellow>"
+  relay-to-discord: true
+  join-format: "<yellow>%player% joined the game</yellow>"
+  leave-format: "<yellow>%player% left the game</yellow>"
 
 # [ RANKS ]
 # What system do you want to use for visual ranks?
@@ -49,7 +49,7 @@ rank-system: "ProxyChat"
 # The plugin will stop scanning channels when it reaches an empty channel
 # Servers not listed will have their player chat disabled
 # The 'discord' entry is used to determine what channel to send dc -> mc messages to
-# The 'join-messages' is for join/leave messages
+# The 'join-leave' is for join/leave messages
 
 channels:
   0: # put independent servers here (channel 0 is for servers that do NOT share messages)
@@ -61,7 +61,7 @@ channels:
     - "lobby_2"
     - "lobby_3"
     - "discord"
-    - "join-messages"
+    - "join-leave"
   2:
   3:
   4:
@@ -69,7 +69,7 @@ channels:
   6:
   7:
   8:
-# if you ever need more than 8 channels then just add more to the config
+# if you ever need more channels, just add more to the config
 # remind me to add regex parsing to the server names (to allow shit like lobby-[0-9] )
 
 # Reports failed to send messages to console
@@ -97,8 +97,8 @@ discord:
   enabled: false
   token: "YOUR-TOKEN-HERE"
   channel-id: "CHANNEL-ID"
-  message-format-dc2mc: "add foramtting later"
-  message-format-mc2dc: "add formatting later"
+  message-format-dc2mc: "<grey>[<blue>Discord</blue>]</grey> <%rank_color%>[%rank%] %player%</%rank_color%> <white>: %message%"
+  message-format-mc2dc: "[%server%] %prefix% %player% : %message%"
 
 
 
@@ -111,3 +111,12 @@ xProxy:
   xProxy-server-port: 25599
   password: "P@ssword" # set to same value as in xProxy config
 
+
+
+
+#   Permissions:
+#   proxychat.mute - mute, unmute, mute-list and mute-status  commands
+#   proxychat.rank - used for editing ranks when 'ProxyChat' is selected for rank-system
+#   proxychat.broadcast - allows players to send a message to entire proxy (+ProxyChat)
+#   proxychat.msg - pm players, this is enabled for everyone by default
+#

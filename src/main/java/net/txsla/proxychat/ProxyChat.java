@@ -39,7 +39,7 @@ public class ProxyChat {
         proxy = thisProxy; // I promise this is best practice
         dir = dataDir;
         try {
-            // config file magic (I followed a tutorial for this one and I would rather eat glass than read more documentation)
+            // config file magic
             config = YamlDocument.create(new File(dataDir.toFile(), "config.yml"),
                     Objects.requireNonNull(getClass().getResourceAsStream("/config.yml")),
                     GeneralSettings.DEFAULT,
@@ -111,7 +111,11 @@ public class ProxyChat {
         mute.loadMuteList();
 
         // start discord bot
+        try {
         net.txsla.proxychat.discord.bot.start();
+        }catch (Exception e) {
+            System.out.println("Unable to connect to discord bot. Did you provide a valid token?");
+        }
 
         // start xProxy client if applicable
         if (xProxyEnabled) initialiseXProxy();
@@ -124,10 +128,14 @@ public class ProxyChat {
 
         // load commands
         CommandManager commandManager = proxy.getCommandManager();
+
+        // mute commands
         commandManager.register(commandManager.metaBuilder("mute").plugin(this).build(), net.txsla.proxychat.commands.mute.muteCommand(proxy) );
         commandManager.register(commandManager.metaBuilder("mute-list").plugin(this).build(), net.txsla.proxychat.commands.mute_list.muteListCommand(proxy) );
         commandManager.register(commandManager.metaBuilder("mute-status").plugin(this).build(), net.txsla.proxychat.commands.mute_status.muteStatusCommand(proxy) );
         commandManager.register(commandManager.metaBuilder("unmute").plugin(this).build(), net.txsla.proxychat.commands.unmute.unmuteCommand(proxy) );
+
+        // msg commands
     }
 
     // load misc config vars - I will most likely clean this up in a later update
@@ -138,8 +146,8 @@ public class ProxyChat {
         format.message_format = config.getString("message-format");
         format.leave_format = config.getString("join-messages.leave-format");
         format.join_format = config.getString("join-messages.join-format");
-        format.dc2mc_format = config.getString("");
-        format.mc2dc_format = config.getString("");
+        format.dc2mc_format = config.getString("discord.message-format-dc2mc");
+        format.mc2dc_format = config.getString("discord.message-format-mc2dc");
 
         proxyName = config.getString("proxy-name");
         send.reportFailedMessages = config.getBoolean("reportFailedMessages");
@@ -203,4 +211,5 @@ public class ProxyChat {
             xProxyClient.out = ("con¦" + password);
         }).start();
     }
+
 }

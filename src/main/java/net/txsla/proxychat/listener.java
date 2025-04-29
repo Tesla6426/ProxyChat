@@ -1,10 +1,14 @@
 package net.txsla.proxychat;
 
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.txsla.proxychat.discord.bot;
+
+import java.util.regex.Matcher;
 
 public class listener {
     @Subscribe
@@ -29,7 +33,10 @@ public class listener {
             }
         }
 
-        send.messageChannel(server, format.playerMessage(sender, message));
+        // message channel
+        send.messageChannel(sender, server,  message);
+
+        // log message to file
         if (log.enabled) log.add( "[" + server.getServerInfo().getName() + "] <" + sender.getUsername() + "> : " + message);
 
         // send to xProxy
@@ -43,7 +50,28 @@ public class listener {
     public void onPlayerJoin(LoginEvent event) {
         // add player to spam list, no need for bypass if configured correctly
         if (spamLimiter.enabled) spamLimiter.addPlayer(event.getPlayer());
+
+        // join messages
+        send.messageChannel("join-leave", format.playerJoinMessage(event.getPlayer()));
+        bot.send("_" +
+                format.playerJoinMessage(event.getPlayer())
+                        // remove minimessage and legacy tags as they do not work on discord
+                        .replaceAll("[&§][0-9a-fk-or]", "")
+                        .replaceAll("</?[a-z0-9:#_]+>", "")
+                        .replaceAll("_", Matcher.quoteReplacement("\\_")) + "_"
+        );
     }
     @Subscribe
-    public void onPlayerADS() {}
+    public void onDisconnectEvent(DisconnectEvent event) {
+        // leave messages
+        send.messageChannel("join-leave", format.playerLeaveMessage(event.getPlayer()));
+        bot.send("_" +
+                format.playerLeaveMessage(event.getPlayer())
+                        // remove minimessage and legacy tags as they do not work on discord
+                        .replaceAll("[&§][0-9a-fk-or]", "")
+                        .replaceAll("</?[a-z0-9:#_]+>", "")
+                        .replaceAll("_", Matcher.quoteReplacement("\\_")) + "_"
+        );
+
+    }
 }
