@@ -12,15 +12,15 @@ ProxyChatRanks:
   ranks-config:
     # default rank is for all non-ranked players, do NOT delete this or add it to the rank list
     default:
-      prefix: "&7[MEMBER]"
+      prefix: "&7[mem]"
     admin:
-      prefix: "&4[ADMIN]"
+      prefix: "&4[ad]"
       players:
         - "_txsla"
         - "nbtArchives"
         - "your-ign"
     moderator:
-      prefix: "&c[Moderator]"
+      prefix: "&c[Mod]"
       players:
         - "mod1"
         - "mod2"

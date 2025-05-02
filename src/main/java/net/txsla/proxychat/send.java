@@ -3,7 +3,10 @@ package net.txsla.proxychat;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.txsla.proxychat.ProxyChat;
+import net.txsla.proxychat.X_Proxy.xProxyClient;
 import net.txsla.proxychat.discord.bot;
+import net.txsla.proxychat.format;
 
 import java.util.ArrayList;
 import java.util.Base64;

@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.txsla.proxychat.discord.bot;
+import net.txsla.proxychat.filter.spamLimiter;
 
 import java.util.regex.Matcher;
 

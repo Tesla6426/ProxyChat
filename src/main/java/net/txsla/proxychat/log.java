@@ -12,7 +12,7 @@ public class log {
     static File logFile;
     static String path;
     static String logFileName;
-    static boolean enabled;
+    public static boolean enabled;
     public static void add(String message) {
         // log text to file
         try {

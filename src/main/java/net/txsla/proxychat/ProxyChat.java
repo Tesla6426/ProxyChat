@@ -14,6 +14,9 @@ import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
+import net.txsla.proxychat.X_Proxy.xProxyClient;
+import net.txsla.proxychat.filter.spamLimiter;
+import net.txsla.proxychat.rank.ranks;
 import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
@@ -84,9 +87,7 @@ public class ProxyChat {
                 // disable ranks
                 ranks.rankSystem = 0;
             }
-            ranks.loadRanks();
         }
-
         // Mute Config
         System.out.println("[ProxyChat] Loading Mute Config...");
         try {
@@ -119,6 +120,11 @@ public class ProxyChat {
 
         // start xProxy client if applicable
         if (xProxyEnabled) initialiseXProxy();
+
+
+        // Load ranks after xProxy
+        try {Thread.sleep(1000);}catch (Exception e) {}
+        ranks.loadRanks();
     }
 
     @Subscribe // < --- sub to my YouTube also :) {I do not ever post though so don't expect much}
@@ -154,20 +160,11 @@ public class ProxyChat {
         log.enabled = config.getBoolean("log-messages");
         try {log.loadLogFile();} catch (Exception e) {e.printStackTrace();}
         switch (config.getString("rank-system").toLowerCase()) {
-            case "proxychat":
-            case "proxy-chat":
-            case "proxy_chat":
-                ranks.rankSystem = 1;
-                break;
-            case "xproxy":
-            case "x-proxy":
-            case "x_proxy":
-                ranks.rankSystem = 2;
-                break;
-            default:
-                ranks.rankSystem = 0;
-                break;
+            case "proxychat", "proxy-chat", "proxy_chat" -> ranks.rankSystem = 1;
+            case "xproxy", "x-proxy", "x_proxy" -> ranks.rankSystem = 2;
+            default -> ranks.rankSystem = 0;
         }
+        System.out.println("RANK SYSTEM " + ranks.rankSystem);
         // spam filter
         spamLimiter.enabled = config.getBoolean("spam-limiter.enabled");
         if (spamLimiter.enabled)

@@ -1,4 +1,4 @@
-package net.txsla.proxychat;
+package net.txsla.proxychat.filter;
 
 import com.velocitypowered.api.proxy.Player;
 import java.util.ArrayList;
@@ -7,9 +7,9 @@ import java.util.List;
 public class spamLimiter {
     static List<Player> index = new ArrayList<>();
     static List<Integer> counter = new ArrayList<>();
-    static int maxCounter;
-    static int decTimer;
-    static boolean enabled;
+    public static int maxCounter;
+    public static int decTimer;
+    public static boolean enabled;
 
     public static void addPlayer(Player player) {
         // do NOT add if player is already added to counter/index

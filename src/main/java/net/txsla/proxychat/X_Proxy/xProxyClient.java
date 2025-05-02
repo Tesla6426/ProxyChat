@@ -1,4 +1,6 @@
-package net.txsla.proxychat;
+package net.txsla.proxychat.X_Proxy;
+
+import net.txsla.proxychat.X_Proxy.xProxy;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -56,6 +58,7 @@ public class xProxyClient {
                     try {
                         recievedData = bufferedReader.readLine();
                         // make your own method to handle the data (make sure to async the method)
+                        System.out.println(recievedData);
                         xProxy.receive(recievedData);
                     } catch (Exception e) {
                         closeClient(socket, bufferedReader, bufferedWriter);
