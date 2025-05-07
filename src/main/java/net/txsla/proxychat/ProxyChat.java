@@ -160,9 +160,19 @@ public class ProxyChat {
         log.enabled = config.getBoolean("log-messages");
         try {log.loadLogFile();} catch (Exception e) {e.printStackTrace();}
         switch (config.getString("rank-system").toLowerCase()) {
-            case "proxychat", "proxy-chat", "proxy_chat" -> ranks.rankSystem = 1;
-            case "xproxy", "x-proxy", "x_proxy" -> ranks.rankSystem = 2;
-            default -> ranks.rankSystem = 0;
+            case "proxychat":
+            case "proxy-chat":
+            case "proxy_chat":
+                ranks.rankSystem = 1;
+                break;
+            case "xproxy":
+            case "x-proxy":
+            case "x_proxy":
+                ranks.rankSystem = 2;
+                break;
+            default:
+                ranks.rankSystem = 0;
+                break;
         }
         System.out.println("RANK SYSTEM " + ranks.rankSystem);
         // spam filter
